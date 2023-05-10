@@ -76,6 +76,7 @@ a {
 
 .page {
     padding: 2rem;
+    margin-left: 17rem;
     width: 100%;
     justify-content: flex-start;
     flex-grow: 0;
@@ -86,4 +87,6 @@ a {
     padding: 1rem 2rem;
     display: inline-block;
     margin: 1.5rem;
+    background-color: white;
+    height: min-content;
 }

@@ -52,6 +52,7 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
+    position: fixed;
 }
 
 hr {
