@@ -28,10 +28,20 @@ onMounted(() => {
         <hr>
         <RouterLink to="login"><img src="../assets/icons/logout.svg" id="logout">Uitloggen</RouterLink>
     </div>
-
+    
 </template>
 
 <style scoped>
+.nav {
+    height: 100vh;
+    width: 15rem;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 3px rgba(149, 149, 149, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
 
 hr {
     width: 75%;
@@ -56,16 +66,6 @@ hr {
     margin-right: 1rem;
 }
 
-.nav {
-    height: 100vh;
-    width: 15rem;
-    background-color: #ffffff;
-    box-shadow: 0px 0px 3px rgba(149, 149, 149, 0.25);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
-}
 
 img {
     filter: saturate(.0) brightness(0.5);

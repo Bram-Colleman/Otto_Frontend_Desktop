@@ -8,6 +8,9 @@ let name = localStorage.getItem('name').split(" ")[0];
 
 <template>
   <Navigation v-bind:active="'home'" style="z-index: 1000;"></Navigation>
+  <div>
+    
+  </div>
 </template>
 
 <style scoped>

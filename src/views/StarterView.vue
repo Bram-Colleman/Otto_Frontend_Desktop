@@ -1,53 +1,23 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-    <div class="logo">
-    </div>
-    <div class="card">
-        <h1>Welkom bij Otto</h1>
-        <div class="flex col">
-            <RouterLink to="/register"><button>Registreer</button></RouterLink>
-            <div class="separator">of</div>
-            <RouterLink to="/login"><button>Log in</button></RouterLink>
-        </div>
-    </div>
+  <div class="container">
+    <h1>Welkom</h1>
+    <RouterLink to="/login"><button>Log in</button></RouterLink>
+    <RouterLink to="/register"><button>Registreer</button></RouterLink>
+  </div>
 </template>
 
 <style scoped>
- h1 {
-    margin: 10rem 0 5rem 0;
- }
-
-
- .separator {
+.container {
+  padding: 5rem;
+  margin: 10% 40rem 10% 40rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
-  color: rgba(223, 223, 223, 1);
-}
-
-.separator::before,
-.separator::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid rgba(223, 223, 223, 1);
-}
-
-.separator:not(:empty)::before {
-  margin-right: 16px;
-}
-
-.separator:not(:empty)::after {
-  margin-left: 16px;
-}
-
-.card {
-    z-index: 2;
-}
-.logo {
-    display: flex;
-    justify-content: center;
+  justify-content: center;
+  background: #fdfefd;
+  box-shadow: 0px 0px 20px rgba(62, 62, 62, 0.23);
+  border-radius: 43px;
 }
 </style>
