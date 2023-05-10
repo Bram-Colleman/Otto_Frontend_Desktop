@@ -61,22 +61,22 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     // this route requires auth, check if logged in
-//     // if not, redirect to login page.
-//     if (isAuth().then(result => {
-//       if(result) {
-//         next();
-//       } else {
-//         next({ name: 'start' });
-//       }
-//     })){
-//     }
-//   } else {
-//     next() // does not require auth, make sure to always call next()!
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (isAuth().then(result => {
+      if(result) {
+        next();
+      } else {
+        next({ name: 'start' });
+      }
+    })){
+    }
+  } else {
+    next() // does not require auth, make sure to always call next()!
+  }
+})
 
 async function isAuth() {
     let x = await fetch("https://otto-backend.onrender.com/api/eldercare/auth", {

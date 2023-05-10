@@ -3,7 +3,7 @@ import Navigation from '../components/Navigation.vue';
 
 
 
-let name = localStorage.getItem('name').split(" ")[0];
+// let name = localStorage.getItem('name').split(" ")[0];
 </script>
 
 <template>

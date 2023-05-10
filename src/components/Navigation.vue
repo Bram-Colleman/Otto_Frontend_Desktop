@@ -3,6 +3,9 @@ import { onMounted } from 'vue';
 
 const props = defineProps(['active']);
 
+function clearstorage() {
+  localStorage.clear();
+}
 
 onMounted(() => {
     switch (props.active) {
@@ -26,7 +29,7 @@ onMounted(() => {
         <RouterLink to="/chat"><img src="../assets/icons/chat.svg" id="chat"> Chat</RouterLink>
         <RouterLink to="/settings"><img src="../assets/icons/settings.svg" id="settings">Instellingen</RouterLink>
         <hr>
-        <RouterLink to="login"><img src="../assets/icons/logout.svg" id="logout">Uitloggen</RouterLink>
+        <RouterLink to="/login" @click="clearstorage"><img src="../assets/icons/logout.svg" id="logout">Uitloggen</RouterLink>
     </div>
     
 </template>
