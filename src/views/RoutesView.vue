@@ -7,115 +7,215 @@ import Navigation from "../components/Navigation.vue";
     <Navigation v-bind:active="'routes'" style="z-index: 1000" />
     <div class="page">
       <h1>Routes</h1>
-      <div class="container">
-        <h1>Actieve ritten</h1>
-        <div class="container_items">
-          <div class="container_elements">
-            <div class="container_element_picture">
-              <img src="../assets/icons/profile.svg" alt="people" />
-            </div>
-            <div class="container_element_content">
-              <h2>Bram Colleman</h2>
-              <div class="flex_destination">
-                <img src="../assets/icons/route.svg" alt="" />
-                <span>In de Tuinwijk aan het rijden</span>
+      <div class="flex wrapper">
+          <div class="card">
+            <h1>Actieve ritten</h1>
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                    <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
               </div>
             </div>
-            <div class="icons">
-              <img
-                class="target"
-                src="../assets/icons/target.svg"
-                alt="target"
-              />
-              <img
-                class="target"
-                src="../assets/icons/chatblue.svg"
-                alt="chat"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container margin">
-        <h1>Aankomende ritten</h1>
-        <div class="container_items">
-          <div class="container_elements">
-            <div class="container_element_picture">
-              <img src="../assets/icons/profile.svg" alt="people" />
-            </div>
-            <div class="container_element_content">
-              <h2>Bram Colleman</h2>
-              <div class="flex_destination">
-                <img src="../assets/icons/route.svg" alt="" />
-                <span>In de Tuinwijk aan het rijden</span>
+    
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                    <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
               </div>
             </div>
-            <div class="icons">
-              <img
-                class="target"
-                src="../assets/icons/target.svg"
-                alt="target"
-              />
-              <img
-                class="target"
-                src="../assets/icons/chatblue.svg"
-                alt="chat"
-              />
+    
+    
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                    <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
+              </div>
+            </div>
+    
+          </div>
+          <div class="card">
+            <h1>Aankomende ritten</h1>
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                  <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
       </div>
+      <div class="card">
+            <h1>Oude ritten</h1>
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                  <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="container_items">
+              <div class="container_elements">
+                <div class="container_element_picture">
+                  <img src="../assets/icons/profile.svg" alt="people" />
+                </div>
+                <div class="container_element_content">
+                  <h3>Bram Colleman</h3>
+                  <div class="flex flex_destination">
+                    <img src="../assets/icons/route.svg" alt="" />
+                    <span>In de Tuinwijk aan het rijden</span>
+                  </div>
+                </div>
+                <div class="icons">
+                  <img
+                    class="target"
+                    src="../assets/icons/target.svg"
+                    alt="target"
+                  />
+                  <img
+                    class="target"
+                    src="../assets/icons/chatblue.svg"
+                    alt="chat"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.margin {
-  margin-left: 1.5rem;
+.wrapper {
+    flex-grow: 0;
+}
+h3 {
+    margin: 0;
+}
+.card h1 {
+    font-size: 1.5rem;
 }
 .icons {
   padding-left: 1rem;
-  margin-left: auto;
   padding-right: 0.3rem;
 }
-
 .target {
-  width: 2rem;
-  height: 2rem;
-  padding: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: .75rem;
   cursor: pointer;
-  transition: 0.3s;
 }
-
 h1 {
   text-align: left;
 }
-
-span {
-  font-size: 1.5rem;
-}
-
 .flex_destination {
-  display: flex;
-  flex-direction: row;
   align-items: center;
 }
 
 .flex_destination img {
-  width: 2rem;
-  height: 2rem;
-  padding-right: 1rem;
+  padding-right: .5rem;
 }
-.container_element_content {
-  line-height: 0.2rem;
-  margin-bottom: 0.7rem;
-}
-
 .container_element_picture img {
-  padding-right: 2rem;
+  padding-right: 1rem;
   width: 4rem;
-  height: 4rem;
-  border-radius: 50px;
+  border-radius: 50%;
 }
 .page {
   background-color: #fafafa;
@@ -143,8 +243,7 @@ span {
 }
 
 .container_items {
-  background: #ffffff;
-  box-shadow: 0px 3px 10px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0px 3px 10px 4px rgba(0, 0, 0, 0.05);
   border-radius: 5px;
 }
 </style>
