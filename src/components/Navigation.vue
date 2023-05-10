@@ -45,7 +45,7 @@ onMounted(() => {
 }
 .nav {
     height: 100vh;
-    width: 15rem;
+    width: 17rem;
     background-color: #ffffff;
     box-shadow: 0px 0px 3px rgba(149, 149, 149, 0.25);
     display: flex;
