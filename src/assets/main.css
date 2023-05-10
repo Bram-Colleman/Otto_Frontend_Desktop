@@ -73,3 +73,10 @@ a {
     text-decoration: none;
     color: #00131D;
 }
+
+.page {
+    padding: 2rem;
+    width: 100%;
+    justify-content: flex-start;
+    flex-grow: 0;
+}

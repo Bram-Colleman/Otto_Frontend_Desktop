@@ -23,11 +23,11 @@ onMounted(() => {
 
 <template>
     <div class="nav">
-        <RouterLink to="/"><img src="../assets/icons/home.svg" id="home"/>Start</RouterLink>
-        <RouterLink to="/residents"><img src="../assets/icons/people.svg" id="residents">Bewoners</RouterLink>
-        <RouterLink to="/routes"><img src="../assets/icons/route.svg" id="routes">Routes</RouterLink>
-        <RouterLink to="/chat"><img src="../assets/icons/chat.svg" id="chat"> Chat</RouterLink>
-        <RouterLink to="/settings"><img src="../assets/icons/settings.svg" id="settings">Instellingen</RouterLink>
+        <RouterLink to="/" id="home"><img src="../assets/icons/home.svg"/>Start</RouterLink>
+        <RouterLink to="/residents" id="residents"><img src="../assets/icons/people.svg">Bewoners</RouterLink>
+        <RouterLink to="/routes" id="routes"><img src="../assets/icons/route.svg">Routes</RouterLink>
+        <RouterLink to="/chat" id="chat"><img src="../assets/icons/chat.svg"> Chat</RouterLink>
+        <RouterLink to="/settings" id="settings"><img src="../assets/icons/settings.svg">Instellingen</RouterLink>
         <hr>
         <RouterLink to="/login" @click="clearstorage"><img src="../assets/icons/logout.svg" id="logout">Uitloggen</RouterLink>
     </div>
@@ -35,6 +35,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.active img {
+    filter: none;
+}
+.active {
+    font-weight: bold;
+    color: #3289F3;
+    border-right: #3289F3 3px solid;    
+}
 .nav {
     height: 100vh;
     width: 15rem;
@@ -53,13 +61,10 @@ hr {
     background-color: #e4e4e4;
 }
 
-.nav_item {
-    margin: 1rem;
-}
 
 .nav a {
     font-size: 1.25rem;
-    margin: 2rem;
+    margin: 2rem 0 2rem 2rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -73,8 +78,6 @@ hr {
 img {
     filter: saturate(.0) brightness(0.5);
 }
-.active {
-    filter: none;
-}
+
 
 </style>
