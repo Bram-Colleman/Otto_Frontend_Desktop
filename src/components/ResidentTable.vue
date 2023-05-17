@@ -1,5 +1,25 @@
 <script setup>
+import { onMounted } from "vue";
+
 let residents;
+
+function login() {
+  fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: 'bearer '+ localStorage.getItem("token"),
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
+}
+
+onMounted(() => {
+  login();
+});
 </script>
 
 <template>
