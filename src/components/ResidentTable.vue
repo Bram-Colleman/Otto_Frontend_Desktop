@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
-let residents;
+let residents = ref();
 
 function login() {
   fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
@@ -13,7 +13,8 @@ function login() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      residents.value = data.residents;
+      console.log(residents);
     });
 }
 
@@ -36,15 +37,7 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Bram Colleman</td>
-          <td>75</td>
-          <td>183</td>
-          <td>0487305561</td>
-          <td>Rolstoel</td>
-          <td class="options">•••</td>
-        </tr>
-        <tr>
+        <tr v-for="r in residents">
           <td>Bram Colleman</td>
           <td>75</td>
           <td>183</td>
