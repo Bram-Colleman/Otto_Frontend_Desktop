@@ -12,21 +12,22 @@ function login() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-        email: email.value,
-        password: password.value,
+      email: email.value,
+      password: password.value,
     }),
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("name", data.name);
-        window.location.href = "/";
-      } else {
-        console.error("Something went wrong!");
-        error.value = !error.value;
-      }
-    });
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.status === "success") {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("name", data.name);
+      localStorage.setItem("id", data.id);
+      window.location.href = "/";
+    } else {
+      console.error("Something went wrong!");
+      error.value = !error.value;
+    }
+  });
 }
 </script>
 

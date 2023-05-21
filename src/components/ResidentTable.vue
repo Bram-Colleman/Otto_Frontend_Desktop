@@ -14,7 +14,6 @@ function login() {
     .then((response) => response.json())
     .then((data) => {
       residents.value = data.residents;
-      console.log(residents);
     });
 }
 
@@ -54,7 +53,7 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="r in residents">
+        <tr v-for="r in residents" :key="resident.id">
           <td>{{ r.name }}</td>
           <td>{{ calculateAge(r.dateOfBirth) }}</td>
           <td>{{ r.roomNumber }}</td>

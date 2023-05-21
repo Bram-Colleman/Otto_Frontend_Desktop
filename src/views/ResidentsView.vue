@@ -1,17 +1,36 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import Navigation from "../components/Navigation.vue";
 import ResidentTable from "../components/ResidentTable.vue";
+import AddResident from "../components/AddResident.vue";
+
 let name = localStorage.getItem("name");
+let showAddResident = ref(false);
 
 function setActive(id) {
-    document.querySelector("#bewoners").classList.remove('active');
-    document.querySelector("#archief").classList.remove('active');
-    document.querySelector(id).classList.add('active');
+  document.querySelector("#bewoners").classList.remove('active');
+  document.querySelector("#archief").classList.remove('active');
+  document.querySelector(id).classList.add('active');
 }
 
-onMounted(()=> {
-    document.querySelector("#bewoners").classList.add('active');
+function toggleAddResident() {
+  showAddResident.value = !showAddResident.value;
+}
+
+function clickOutside(event) {
+  if (!event.target.closest("#add-resident")) {
+    showAddResident.value = false;
+  }
+}
+
+onMounted(() => {
+  document.querySelector("#bewoners").classList.add('active');
+  document.addEventListener("click", clickOutside);
+});
+
+// Cleanup event listener on component unmount
+onUnmounted(() => {
+  document.removeEventListener("click", clickOutside);
 });
 </script>
 
@@ -22,6 +41,7 @@ onMounted(()=> {
       <div class="head">
         <h1>{{ name }}</h1>
         <hr />
+        <AddResident v-if="showAddResident" />
         <div class="flex">
           <div class="flex actionbuttons">
             <div class="action flex grow">
@@ -33,7 +53,7 @@ onMounted(()=> {
               <img src="../assets/search.svg" class="search">
             </div>
             <div class="action right">
-              <button class="flex"><img src="../assets/plus.svg" class="plus"><span>Nieuwe bewoner</span></button>
+              <button class="flex" @click="toggleAddResident"><img src="../assets/plus.svg" class="plus"><span>Nieuwe bewoner</span></button>
             </div>
           </div>
         </div>
@@ -43,34 +63,35 @@ onMounted(()=> {
   </div>
 </template>
 
+
 <style scoped>
 .tab {
-    padding: 1rem;
-    margin-bottom: 0;
-    /* user-select: none; */
+  padding: 1rem;
+  margin-bottom: 0;
+  /* user-select: none; */
 }
 .tab:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 .center {
-    text-align: center;
+  text-align: center;
 }
 .active {
-    font-weight: bold;
-    color: #3289F3;
-    border-bottom: #3289F3 3px solid;
+  font-weight: bold;
+  color: #3289f3;
+  border-bottom: #3289f3 3px solid;
 }
 .search {
-    position: relative;
-    top: .35rem;
-    left: -2.5rem;
-    filter: grayscale(1);
-    opacity: .25;
+  position: relative;
+  top: 0.35rem;
+  left: -2.5rem;
+  filter: grayscale(1);
+  opacity: 0.25;
 }
 .plus {
-    filter: brightness(100);
-    height: 100%;
-    margin-right: 1rem;
+  filter: brightness(100);
+  height: 100%;
+  margin-right: 1rem;
 }
 .head {
   background-color: #fafafa;
@@ -94,6 +115,7 @@ onMounted(()=> {
   text-align: right;
 }
 button {
+  cursor: pointer;
   margin: 0;
   height: 3rem;
   padding: 1rem;
