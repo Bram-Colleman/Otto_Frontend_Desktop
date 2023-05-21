@@ -6,6 +6,8 @@ let dateOfBirth = ref("");
 let roomNumber = ref("");
 let emergencyContact = ref("");
 let needs = ref("");
+const emits = defineEmits(["close"]);
+
 
 function addResident() {
   fetch("https://otto-backend.onrender.com/api/resident/create", {
@@ -36,6 +38,9 @@ function addResident() {
 
 <template>
   <div class="overlay">
+    <div class="close" @click="$emit('close')">
+      <img src="../assets/plus.svg" class="plus">
+    </div>
     <div class="form-container">
       <h1>Bewoner toevoegen</h1>
       <form @submit.prevent="addResident">
@@ -65,13 +70,13 @@ function addResident() {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1001;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .form-container {
@@ -94,5 +99,27 @@ button {
 
 button:hover {
   background-color: #1e88e5;
+}
+.close {
+  width: 2rem;
+  height: 2rem;
+  background-color: #1e88e5;
+  border-radius: 50%;
+  padding: .25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -39%;
+  right: -54.25%;
+  cursor: pointer;
+
+}
+
+.close img {
+  filter: brightness(10);
+  transform: rotate(45deg);
+  width: 1.5rem;
+
 }
 </style>
