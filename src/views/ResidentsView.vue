@@ -1,11 +1,12 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import Navigation from "../components/Navigation.vue";
 import ResidentTable from "../components/ResidentTable.vue";
 import AddResident from "../components/AddResident.vue";
 
 let name = localStorage.getItem("name");
 let showAddResident = ref(false);
+
 
 function setActive(id) {
   document.querySelector("#bewoners").classList.remove('active');
@@ -17,21 +18,10 @@ function toggleAddResident() {
   showAddResident.value = !showAddResident.value;
 }
 
-function clickOutside(event) {
-  if (!event.target.closest("#add-resident")) {
-    showAddResident.value = false;
-  }
-}
-
 onMounted(() => {
   document.querySelector("#bewoners").classList.add('active');
-  document.addEventListener("click", clickOutside);
 });
 
-// Cleanup event listener on component unmount
-onUnmounted(() => {
-  document.removeEventListener("click", clickOutside);
-});
 </script>
 
 <template>
@@ -41,7 +31,7 @@ onUnmounted(() => {
       <div class="head">
         <h1>{{ name }}</h1>
         <hr />
-        <AddResident v-if="showAddResident" />
+        <AddResident v-if="showAddResident" @close="toggleAddResident"/>
         <div class="flex">
           <div class="flex actionbuttons">
             <div class="action flex grow">
