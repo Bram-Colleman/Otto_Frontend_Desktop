@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
 
-let name = ref("");
-let dateOfBirth = ref("");
-let roomNumber = ref("");
-let emergencyContact = ref("");
-let needs = ref("");
+let origin = ref("");
+let destination = ref("");
+let residents = ref("");
+let timestamp = ref("");
+
 const emits = defineEmits(["close"]);
 
 
@@ -17,10 +17,10 @@ function addRide() {
       authorization: "bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
-    origin: name.value,
+    origin: origin.value,
     destination: [51.0804994, 4.4269701] ,
     residents: ["6464cd45a4fb80d9cc69200d"],
-    timeStamp: "2023-10-15T18:56:00.000+02:00"
+    timeStamp: timestamp.value
 }),
   })
     .then((response) => response.json())
@@ -41,23 +41,21 @@ function addRide() {
     </div>
     <div class="form-container">
       <h1>Bewoner toevoegen</h1>
-      <form @submit.prevent="addResident">
-        <label for="name">Naam:</label>
-        <input type="text" id="name" v-model="name" required />
+      <form @submit.prevent="addRide">
+        <label for="origin">Vertrekpunt:</label>
+        <input type="text" id="origin" v-model="origin" required />
 
-        <label for="dob">Geboortedatum:</label>
-        <input type="date" id="dob" v-model="dateOfBirth" required />
+        <label for="destination">Bestemming:</label>
+        <input type="text" id="destination" v-model="destination" required />
 
-        <label for="room">Kamernummer:</label>
-        <input type="text" id="room" v-model="roomNumber" required />
+        <label for="residents">Bewoners:</label>
+        <input type="text" id="residents" v-model="residents" required />
 
-        <label for="emergency">Noodcontact:</label>
-        <input type="tel" id="emergency" v-model="emergencyContact" required />
+        <label for="timestamp">Datum & Tijd:</label>
+        <input type="datetime-local" id="timestamp" v-model="timestamp" required />
 
-        <label for="needs">Speciale noden:</label>
-        <input id="needs" v-model="needs" />
 
-        <button type="submit">Bewoner Toevoegen</button>
+        <button type="submit">Rit aanmaken</button>
       </form>
     </div>
   </div>
