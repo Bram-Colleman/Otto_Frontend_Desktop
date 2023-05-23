@@ -61,6 +61,7 @@ onMounted(() => {
           <td>
             <ul>
               <li v-for="need in r.needs">{{ need }}</li>
+              <li v-if="r.needs[0] == ''"> - </li>
             </ul>
           </td>
           <td class="options">•••</td>
@@ -82,6 +83,11 @@ table {
 }
 tbody {
   text-align: center;
+}
+
+tbody td {
+  padding: 0;
+  line-height: 1rem;
 }
 th {
   padding: 0.75rem 0;

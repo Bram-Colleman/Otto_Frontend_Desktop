@@ -9,26 +9,24 @@ let needs = ref("");
 const emits = defineEmits(["close"]);
 
 
-function addResident() {
-  fetch("https://otto-backend.onrender.com/api/resident/create", {
+function addRide() {
+  fetch("https://otto-backend.onrender.com/api/ride/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: "bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
-      name: name.value,
-      dateOfBirth: dateOfBirth.value,
-      roomNumber: roomNumber.value,
-      emergencyContact: emergencyContact.value,
-      needs: needs.value,
-      eldercare: localStorage.getItem("id"),
-    }),
+    origin: name.value,
+    destination: [51.0804994, 4.4269701] ,
+    residents: ["6464cd45a4fb80d9cc69200d"],
+    timeStamp: "2023-10-15T18:56:00.000+02:00"
+}),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        window.location.href = "/residents";
+        window.location.href = "/routes";
       } else {
         console.error("Something went wrong!");
       }
