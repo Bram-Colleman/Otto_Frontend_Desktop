@@ -5,7 +5,7 @@ let name = ref("");
 let dateOfBirth = ref("");
 let roomNumber = ref("");
 let emergencyContact = ref("");
-let needs = ref("");
+let needs = ref("-");
 const emits = defineEmits(["close"]);
 
 
