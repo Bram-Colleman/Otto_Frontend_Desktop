@@ -53,7 +53,7 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="r in residents" :key="resident.id">
+        <tr v-for="r in residents">
           <td>{{ r.name }}</td>
           <td>{{ calculateAge(r.dateOfBirth) }}</td>
           <td>{{ r.roomNumber }}</td>
