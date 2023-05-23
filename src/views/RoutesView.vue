@@ -22,8 +22,8 @@ function toggleAddRide() {
               >Nieuwe route</span
             >
           </button>
-          <AddRide v-if="showAddRide" @close="toggleAddRide" />
         </div>
+        <AddRide v-if="showAddRide" @close="toggleAddRide" />
       </div>
       <div class="flex wrapper">
         <div class="card">
