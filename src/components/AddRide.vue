@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import Map from "./Map.vue";
 
 let origin = ref("");
 let destination = ref("");
@@ -36,11 +37,13 @@ function addRide() {
 
 <template>
   <div class="overlay">
-    <div class="close" @click="$emit('close')">
-      <img src="../assets/plus.svg" class="plus">
     </div>
+    <div class="container">
     <div class="form-container">
-      <h1>Bewoner toevoegen</h1>
+      <div class="close" @click="$emit('close')">
+        <img src="../assets/plus.svg" class="plus">
+      </div>
+      <h1>Rit plannen</h1>
       <form @submit.prevent="addRide">
         <label for="origin">Vertrekpunt:</label>
         <input type="text" id="origin" v-model="origin" required />
@@ -58,10 +61,28 @@ function addRide() {
         <button type="submit">Rit aanmaken</button>
       </form>
     </div>
+    <div class="map">
+      <Map></Map>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.container {
+  position: fixed;
+  z-index: 1002;
+  display: flex;
+  align-items: stretch;
+  margin-left: -17rem;
+  justify-content: center;
+  width: 100vw;
+}
+.map {
+  max-width: 50vw;
+  flex-grow: 1;
+  border-radius: 0 1rem 1rem 0;
+  overflow: hidden;
+}
 .overlay {
   position: fixed;
   top: 0;
@@ -76,10 +97,11 @@ function addRide() {
 }
 
 .form-container {
+  position: relative;
   background-color: white;
   padding: 2rem;
-  border-radius: 1rem;
-  width: 50%;
+  border-radius: 1rem 0 0 1rem;
+  width: 25%;
 }
 
 form {
@@ -97,6 +119,9 @@ button:hover {
   background-color: #1e88e5;
 }
 .close {
+  position: absolute;
+  top: -1rem;
+  left: calc(100% - 1rem + 50vw);
   width: 2rem;
   height: 2rem;
   background-color: #1e88e5;
@@ -105,10 +130,8 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  top: -39%;
-  right: -54.25%;
   cursor: pointer;
+  z-index: 1003;
 
 }
 
