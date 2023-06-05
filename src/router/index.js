@@ -87,7 +87,7 @@ async function isAuth() {
       },
     });
     const data = await x.json();
-    if (data.status == "success") {
+    if (x.status != 403) {
       return true;
     } else {
       return false;
