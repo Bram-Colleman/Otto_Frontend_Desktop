@@ -86,7 +86,6 @@ async function isAuth() {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    const data = await x.json();
     if (x.status != 403) {
       return true;
     } else {
