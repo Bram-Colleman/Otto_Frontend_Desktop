@@ -1,14 +1,19 @@
 <script setup>
 /* eslint-disable no-undef */
-import { computed, onMounted, ref } from "vue";
-import { useGeolocation } from "../scripts/useGeolocation";
+import { computed, onMounted, ref, watch } from "vue";
 import { Loader } from "@googlemaps/js-api-loader";
 const GOOGLE_MAPS_API_KEY = "AIzaSyBKhixrksRyCcnWxY2koJMH2GfDx6ywZgA";
 
-const props = defineProps(["destination", "o"]);
-const { coords } = useGeolocation();
+const props = defineProps(["destination", "origin"]);
+let markers = [];
+const destcoords = ref([]);
+const origincoords = ref([]);
+let directionsService;
+let directionsRenderer;
 
-const currPos = computed(() => ({
+// const { coords } = useGeolocation();
+
+let currPos = computed(() => ({
   lat: coords.value.latitude,
   lng: coords.value.longitude,
 }));
@@ -18,16 +23,30 @@ const mapDiv = ref(null);
 let map;
 
 onMounted(async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+            localStorage.setItem("pos", JSON.stringify(pos));
+            currPos.value = pos;
+        },
+        () => {
+          handleLocationError(true);
+        }
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false);
+    }
   await loader.load();
-  const directionsService = new google.maps.DirectionsService();
-  const directionsRenderer = new google.maps.DirectionsRenderer();
-
-  if(!localStorage.getItem("pos") && currPos.value.lat != 0) {
-    localStorage.setItem("pos", JSON.stringify(currPos.value));
-  }
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
 
   map = new google.maps.Map(mapDiv.value, {
-    center: JSON.parse(localStorage.getItem("pos")),
+    center: JSON.parse(localStorage.getItem("pos")) || currPos.value,
     zoom: 16,
     streetViewControl: false,
     zoomControl: false,
@@ -48,7 +67,9 @@ onMounted(async () => {
     },
   });
 
-  if(props.destination && props.o) {
+
+
+  if(props.destination && props.origin) {
     const destination = computed(() => ({
       lat: props.destination[0],
       lng: props.destination[1]
@@ -57,17 +78,17 @@ onMounted(async () => {
       lat: props.o[0],
       lng: props.o[1]
     }));
-    console.log("dest", destination.value);
-    console.log("orig", or.value);
-     getDirections(map, directionsRenderer, directionsService, destination.value, or.value);
+    //  getDirections(map, directionsRenderer, directionsService, destination.value, or.value);
   }
+//   if(props.origin){
+//       geocode(props.origin);
+//   }
+
 });
 
 
 const getDirections = (map, directionsRenderer, directionsService, dest, orig) => {
   directionsRenderer.setMap(map);
-  let destlat = dest.lat;
-  let destlng = dest.lng;
   
   const request = {
     origin: orig,
@@ -78,13 +99,76 @@ const getDirections = (map, directionsRenderer, directionsService, dest, orig) =
 
   directionsService.route(request, (result, status) => {
     if (status === "OK") {
-      console.log(result);
-      console.log(result.routes[0].legs[0].start_address);
-      console.log(result.routes[0].legs[0].end_address);
       directionsRenderer.setDirections(result);
     }
   });
 };
+
+const geocode = (adres, type) => {
+    const geocoder = new google.maps.Geocoder();
+    map.marker = null;
+    geocoder.geocode(
+        {
+        address: adres,
+        },
+        (results, status) => {
+            if (status === "OK") {
+                map.setCenter(results[0].geometry.location);
+                if(type === "origin") {
+                    if(markers[0]) {
+                        markers[0].setMap(null);
+                    }
+                    addMarker(results[0].geometry.location, 'A');
+                } else if(type === "destination") {
+                    if(markers[1]) {
+                        markers[1].setMap(null);
+                    }
+                    addMarker(results[0].geometry.location, 'B');
+                }
+            }
+        }
+    );
+};
+function addMarker(position, label) {
+  const marker = new google.maps.Marker({
+    position,
+    map,
+    label: {text: label, color: "white"},
+  });
+  if(label === 'A') {
+    markers[0] = marker ;
+  } else if(label === 'B') {
+    markers[1] = marker ;
+  }
+}
+
+// timer for geocode
+let typingTimer;
+watch(() => props.origin, () => {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping(props.origin, "origin"), 1500);
+    });
+watch(() => props.destination, () => {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping(props.destination, "destination"), 1500);
+    });
+
+
+
+function doneTyping (adres, type) {
+
+    geocode(adres, type);
+    if(props.origin && props.destination) {
+
+        directionsRenderer.set('directions', null);
+        getDirections(map, directionsRenderer, directionsService, props.destination, props.origin);
+        markers.forEach((marker) => {
+            marker.setMap(null);
+        });
+    }
+    // let instance = getCurrentInstance();
+}
+
 </script>
 
 <template>

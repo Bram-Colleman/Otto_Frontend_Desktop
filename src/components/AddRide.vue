@@ -1,14 +1,26 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { Loader } from "@googlemaps/js-api-loader";
 import Map from "./Map.vue";
+
+const GOOGLE_MAPS_API_KEY = "AIzaSyBKhixrksRyCcnWxY2koJMH2GfDx6ywZgA";
+const loader = new Loader({ apiKey: GOOGLE_MAPS_API_KEY });
 
 let origin = ref("");
 let destination = ref("");
+let destinationaddress = ref("");
+let originaddress = ref("");
+let destinationcoords = ref("");
+let origincoords = ref("");
+
 let residents = ref("");
 let timestamp = ref("");
 
 const emits = defineEmits(["close"]);
 
+onMounted(() => {
+  loader.load();
+});
 
 function addRide() {
   fetch("https://otto-backend.onrender.com/api/ride/create", {
@@ -18,11 +30,13 @@ function addRide() {
       authorization: "bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
-    origin: origin.value,
-    destination: [51.0804994, 4.4269701] ,
-    residents: ["6464cd45a4fb80d9cc69200d"],
+    origin: origincoords.value,
+    originaddress: originaddress.value,
+    destination: destinationcoords.value,
+    destinationaddress: destinationaddress.value,
+    residents: ["6464cdb8e3799b168c97307c"],
     timeStamp: timestamp.value
-}),
+    }),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -33,6 +47,36 @@ function addRide() {
       }
     });
 }
+const geocode = (adres, type) => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+        {
+        address: adres,
+        },
+        (results, status) => {
+            if (status === "OK") {
+                if(type === "origin") {
+                  originaddress.value = results[0].formatted_address;
+                  origincoords.value = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
+                } else if(type === "destination") {
+                  destinationaddress.value = results[0].formatted_address;
+                  destinationcoords.value = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
+                }
+            }
+        }
+    );
+};
+
+let typingTimer;
+watch(origin, (o) => {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(geocode(o, 'origin'), 1500);
+});
+watch(destination, (d) => {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(geocode(d, 'destination'), 1500);
+});
+
 </script>
 
 <template>
@@ -57,23 +101,28 @@ function addRide() {
         <label for="timestamp">Datum & Tijd:</label>
         <input type="datetime-local" id="timestamp" v-model="timestamp" required />
 
-
         <button type="submit">Rit aanmaken</button>
       </form>
     </div>
     <div class="map">
-      <Map></Map>
+      <Map
+      :origin="origin"
+      :destination="destination"
+      ></Map>
     </div>
   </div>
 </template>
 
 <style scoped>
+button {
+  width: 100% !important;
+}
 .container {
   position: fixed;
   z-index: 1002;
   display: flex;
   align-items: stretch;
-  margin-left: -17rem;
+  margin-left: -19rem;
   justify-content: center;
   width: 100vw;
 }
