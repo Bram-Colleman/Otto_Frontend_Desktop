@@ -9,7 +9,17 @@ let needs = ref("");
 const emits = defineEmits(["close"]);
 const props = defineProps(["residentid"]);
 
-let id = window.location.pathname.split("/")[2];
+let showDeleteConfirmation = ref(false);
+
+// Function to show delete confirmation popup
+function confirmDelete() {
+  showDeleteConfirmation.value = true;
+}
+
+// Function to cancel delete
+function cancelDelete() {
+  showDeleteConfirmation.value = false;
+}
 
 //function to get residents by id
 function GetById(id) {
@@ -33,19 +43,41 @@ function GetById(id) {
 
 //function to edit resident by id
 function editResident() {
-  fetch(`https://otto-backend.onrender.com/api/resident/edit/${props.residentid}`, {
-    method: "PUT",
+  fetch(
+    `https://otto-backend.onrender.com/api/resident/edit/${props.residentid}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        name: name.value,
+        dateOfBirth: dateOfBirth.value,
+        roomNumber: roomNumber.value,
+        emergencyContact: emergencyContact.value,
+        needs: needs.value,
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      if (data.status === "success") {
+        window.location.href = "/residents";
+      } else {
+        console.error("Something went wrong!");
+      }
+    });
+}
+
+function deleteResident() {
+  fetch(`https://otto-backend.onrender.com/api/resident/${props.residentid}`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       authorization: "bearer " + localStorage.getItem("token"),
     },
-    body: JSON.stringify({
-      name: name.value,
-      dateOfBirth: dateOfBirth.value,
-      roomNumber: roomNumber.value,
-      emergencyContact: emergencyContact.value,
-      needs: needs.value,
-    }),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -86,13 +118,59 @@ onMounted(() => {
         <label for="needs">Speciale noden:</label>
         <input id="needs" v-model="needs" />
 
-        <button type="submit">Bewoner Wijzigen</button>
+        <div class="flex">
+          <button class="deletebutton" type="button" @click="confirmDelete">
+            Bewoner Verwijderen
+          </button>
+          <button type="submit">Bewoner Wijzigen</button>
+        </div>
+        <div v-if="showDeleteConfirmation" class="overlay">
+          <div class="delete-confirmation">
+            <h2>Weet je zeker dat je deze bewoner wilt verwijderen?</h2>
+            <div class="flex">
+              <button @click="cancelDelete">Annuleren</button>
+              <button class="deletebutton" @click="deleteResident">
+                Verwijderen
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
 </template>
 
 <style scoped>
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-confirmation {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.delete-confirmation button {
+  margin-left: 0;
+  width: 15rem;
+  cursor: pointer;
+}
+.deletebutton {
+  margin-left: auto;
+  width: 15rem;
+  cursor: pointer;
+  border: 2px solid red;
+  color: red;
+  background-color: white;
+  margin-left: 0;
+}
+
+.deletebutton:hover {
+  color: white;
+  background-color: #e53935;
+}
 .overlay {
   position: fixed;
   top: 0;
