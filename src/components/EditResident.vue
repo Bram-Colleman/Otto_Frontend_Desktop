@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted } from "vue";
 
-let residents = reactive({ residents: []});
 let name = ref("");
 let dateOfBirth = ref("");
 let roomNumber = ref("");
 let emergencyContact = ref("");
 let needs = ref("");
 const emits = defineEmits(["close"]);
+const props = defineProps(["residentid"]);
 
 let id = window.location.pathname.split("/")[2];
 
@@ -22,12 +22,12 @@ function GetById(id) {
   })
     .then((response) => response.json())
     .then((data) => {
-      residents.value = data.data;
-      name.value = data.data.name;
-      dateOfBirth.value = data.data.dateOfBirth;
-      roomNumber.value = data.data.roomNumber;
-      emergencyContact.value = data.data.emergencyContact;
-      needs.value = data.data.needs;
+      const r = data.resident[0];
+      name.value = r.name;
+      dateOfBirth.value = r.dateOfBirth;
+      roomNumber.value = r.roomNumber;
+      emergencyContact.value = r.emergencyContact;
+      needs.value = r.needs;
     });
 
 }
@@ -61,7 +61,8 @@ function editResident(id) {
 }
 
 onMounted(() => {
-  GetById(id);
+  GetById(props.residentid);
+  console.log(props.residentid);
 });
 </script>
 
@@ -74,19 +75,19 @@ onMounted(() => {
       <h1>Bewoner wijzigen</h1>
       <form @submit.prevent="editResident">
         <label for="name">Naam:</label>
-        <input  id="name" v-model="resident.name" required />
+        <input  id="name" v-model="name" required />
 
         <label for="dob">Geboortedatum:</label>
-        <input type="date" id="dob" v-model="resident.dateOfBirth" required />
+        <input type="date" id="dob" v-model="dateOfBirth" required />
 
         <label for="room">Kamernummer:</label>
-        <input type="text" id="room" v-model="resident.roomNumber" required />
+        <input type="text" id="room" v-model="roomNumber"  required />
 
         <label for="emergency">Noodcontact:</label>
-        <input type="tel" id="emergency" v-model="resident.emergencyContact" required />
+        <input type="tel" id="emergency" v-model="emergencyContact"  required />
 
         <label for="needs">Speciale noden:</label>
-        <input id="needs" v-model="resident.needs" />
+        <input id="needs" v-model="needs" />
 
         <button type="submit">Bewoner Wijzigen</button>
       </form>
