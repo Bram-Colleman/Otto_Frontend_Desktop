@@ -8,11 +8,11 @@ let name = localStorage.getItem("name");
 let showAddResident = ref(false);
 
 
-function setActive(id) {
-  document.querySelector("#bewoners").classList.remove('active');
-  document.querySelector("#archief").classList.remove('active');
-  document.querySelector(id).classList.add('active');
-}
+// function setActive(id) {
+//   document.querySelector("#bewoners").classList.remove('active');
+//   document.querySelector("#archief").classList.remove('active');
+//   document.querySelector(id).classList.add('active');
+// }
 
 function toggleAddResident() {
   showAddResident.value = !showAddResident.value;
@@ -36,7 +36,7 @@ onMounted(() => {
           <div class="flex actionbuttons">
             <div class="action flex grow">
               <p class="center tab" id="bewoners" @click="setActive('#bewoners')">Bewoners</p>
-              <p class="center tab" id="archief" @click="setActive('#archief')">Archief</p>
+              <!-- <p class="center tab" id="archief" @click="setActive('#archief')">Archief</p> -->
             </div>
             <div class="action right">
               <input type="text" name="" id="" placeholder="filter"/>
