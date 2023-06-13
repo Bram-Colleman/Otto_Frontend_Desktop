@@ -1,9 +1,14 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import EditResident from "./EditResident.vue";
 
 let residents = ref();
+let resident = ref();
 
-function login() {
+
+
+
+function getResidents() {
   fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
     method: "POST",
     headers: {
@@ -14,6 +19,7 @@ function login() {
     .then((response) => response.json())
     .then((data) => {
       residents.value = data.residents;
+      console.log(residents.value);
     });
 }
 
@@ -35,12 +41,13 @@ function calculateAge(dateOfBirth) {
 }
 
 onMounted(() => {
-  login();
+  getResidents();
 });
 </script>
 
 <template>
   <div>
+    <EditResident :key="resident" />
     <table>
       <thead>
         <tr>
@@ -64,7 +71,7 @@ onMounted(() => {
               <li v-if="r.needs[0] == ''"> - </li>
             </ul>
           </td>
-          <td class="options">•••</td>
+          <td @click="resident=r.id" class="options">•••</td>
         </tr>
       </tbody>
     </table>
@@ -96,6 +103,7 @@ td {
   padding: 0.5rem 0;
 }
 .options {
+  cursor: pointer;
   opacity: 0.25;
 }
 </style>
