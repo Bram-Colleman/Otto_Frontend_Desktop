@@ -6,6 +6,8 @@ let residents = ref();
 let residentid = ref();
 let showEdit = ref(false);
 
+const props = defineProps(["search"]);
+
 function getResidents() {
   fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
     method: "POST",
@@ -47,6 +49,14 @@ function toggleEdit(id) {
   }
   showEdit.value = !showEdit.value;
 }
+
+function filter(text) {
+  if(props.search == ""){
+    return true;
+  } else {
+    return text.toLowerCase().includes(props.search.toLowerCase());
+  }
+}
 </script>
 
 <template>
@@ -65,17 +75,17 @@ function toggleEdit(id) {
       </thead>
       <tbody>
         <tr v-for="r in residents">
-          <td>{{ r.name }}</td>
-          <td>{{ calculateAge(r.dateOfBirth) }}</td>
-          <td>{{ r.roomNumber }}</td>
-          <td>{{ r.emergencyContact }}</td>
-          <td>
-            <ul>
-              <li v-for="need in r.needs">{{ need }}</li>
-              <li v-if="r.needs[0] == ''"> - </li>
-            </ul>
-          </td>
-          <td @click="toggleEdit(r._id)" class="options">•••</td>
+            <td v-if="filter(r.name)">{{ r.name }}</td>
+            <td v-if="filter(r.name)">{{ calculateAge(r.dateOfBirth) }}</td>
+            <td v-if="filter(r.name)">{{ r.roomNumber }}</td>
+            <td v-if="filter(r.name)">{{ r.emergencyContact }}</td>
+            <td v-if="filter(r.name)">
+              <ul>
+                <li v-for="need in r.needs">{{ need }}</li>
+                <li v-if="r.needs[0] == ''"> - </li>
+              </ul>
+            </td>
+            <td @click="toggleEdit(r._id)" class="options" v-if="filter(r.name)">•••</td>
         </tr>
       </tbody>
     </table>

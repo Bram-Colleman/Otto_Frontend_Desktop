@@ -6,7 +6,7 @@ import AddResident from "../components/AddResident.vue";
 
 let name = localStorage.getItem("name");
 let showAddResident = ref(false);
-
+const search = ref("");
 
 // function setActive(id) {
 //   document.querySelector("#bewoners").classList.remove('active');
@@ -39,7 +39,7 @@ onMounted(() => {
               <!-- <p class="center tab" id="archief" @click="setActive('#archief')">Archief</p> -->
             </div>
             <div class="action right">
-              <input type="text" name="" id="" placeholder="filter"/>
+              <input type="text" name="" id="" placeholder="Zoek op naam" v-model="search" class="searchinput"/>
               <img src="../assets/search.svg" class="search">
             </div>
             <div class="action right">
@@ -48,7 +48,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <ResidentTable/>
+      <ResidentTable :search="search"/>
     </div>
   </div>
 </template>
@@ -77,6 +77,9 @@ onMounted(() => {
   left: -2.5rem;
   filter: grayscale(1);
   opacity: 0.25;
+}
+.searchinput:focus {
+  outline: none;
 }
 .plus {
   filter: brightness(100);
