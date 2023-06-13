@@ -3,10 +3,8 @@ import { onMounted, ref } from "vue";
 import EditResident from "./EditResident.vue";
 
 let residents = ref();
-let resident = ref();
-
-
-
+let residentid = ref();
+let showEdit = ref(false);
 
 function getResidents() {
   fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
@@ -19,7 +17,6 @@ function getResidents() {
     .then((response) => response.json())
     .then((data) => {
       residents.value = data.residents;
-      console.log(residents.value);
     });
 }
 
@@ -43,11 +40,18 @@ function calculateAge(dateOfBirth) {
 onMounted(() => {
   getResidents();
 });
+
+function toggleEdit(id) {
+  if(id) {
+    residentid.value = id;
+  }
+  showEdit.value = !showEdit.value;
+}
 </script>
 
 <template>
   <div>
-    <EditResident :key="resident" />
+    <EditResident v-if="showEdit" :residentid="residentid" @close="toggleEdit" />
     <table>
       <thead>
         <tr>
@@ -71,7 +75,7 @@ onMounted(() => {
               <li v-if="r.needs[0] == ''"> - </li>
             </ul>
           </td>
-          <td @click="resident=r.id" class="options">•••</td>
+          <td @click="toggleEdit(r._id)" class="options">•••</td>
         </tr>
       </tbody>
     </table>
