@@ -29,13 +29,11 @@ function GetById(id) {
       emergencyContact.value = r.emergencyContact;
       needs.value = r.needs;
     });
-
 }
 
-
 //function to edit resident by id
-function editResident(id) {
-  fetch(`https://otto-backend.onrender.com/api/resident/edit/${id}`, {
+function editResident() {
+  fetch(`https://otto-backend.onrender.com/api/resident/edit/${props.residentid}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -47,11 +45,11 @@ function editResident(id) {
       roomNumber: roomNumber.value,
       emergencyContact: emergencyContact.value,
       needs: needs.value,
-      eldercare: localStorage.getItem("id"),
     }),
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       if (data.status === "success") {
         window.location.href = "/residents";
       } else {
@@ -62,29 +60,28 @@ function editResident(id) {
 
 onMounted(() => {
   GetById(props.residentid);
-  console.log(props.residentid);
 });
 </script>
 
 <template>
   <div class="overlay">
     <div class="close" @click="$emit('close')">
-      <img src="../assets/plus.svg" class="plus">
+      <img src="../assets/plus.svg" class="plus" />
     </div>
     <div class="form-container">
       <h1>Bewoner wijzigen</h1>
       <form @submit.prevent="editResident">
         <label for="name">Naam:</label>
-        <input  id="name" v-model="name" required />
+        <input id="name" v-model="name" required />
 
         <label for="dob">Geboortedatum:</label>
         <input type="date" id="dob" v-model="dateOfBirth" required />
 
         <label for="room">Kamernummer:</label>
-        <input type="text" id="room" v-model="roomNumber"  required />
+        <input type="text" id="room" v-model="roomNumber" required />
 
         <label for="emergency">Noodcontact:</label>
-        <input type="tel" id="emergency" v-model="emergencyContact"  required />
+        <input type="tel" id="emergency" v-model="emergencyContact" required />
 
         <label for="needs">Speciale noden:</label>
         <input id="needs" v-model="needs" />
@@ -135,7 +132,7 @@ button:hover {
   height: 2rem;
   background-color: #1e88e5;
   border-radius: 50%;
-  padding: .25rem;
+  padding: 0.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -143,13 +140,11 @@ button:hover {
   top: -39%;
   right: -54.25%;
   cursor: pointer;
-
 }
 
 .close img {
   filter: brightness(10);
   transform: rotate(45deg);
   width: 1.5rem;
-
 }
 </style>
