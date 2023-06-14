@@ -17,7 +17,6 @@ function getRides() {
     .then((response) => response.json())
     .then((data) => {
       rides.value = data.rides;
-      console.log(data.rides);
     });
 }
 

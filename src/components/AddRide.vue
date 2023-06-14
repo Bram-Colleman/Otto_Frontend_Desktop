@@ -13,29 +13,62 @@ let originaddress = ref("");
 let destinationcoords = ref("");
 let origincoords = ref("");
 
-let residents = ref("");
+let residents = ref([""]);
+let resident = ref("");
 let timestamp = ref("");
 
 const emits = defineEmits(["close"]);
 
 onMounted(() => {
   loader.load();
+  getResidents();
+
 });
+
+const multiSelectWithoutCtrl = ( elemSelector ) => {
+  let options = [].slice.call(document.querySelectorAll(`${elemSelector} option`));
+  options.forEach(function (element) {
+      element.addEventListener("mousedown", 
+          function (e) {
+              e.preventDefault();
+              element.parentElement.focus();
+              this.selected = !this.selected;
+              return false;
+          }, false );
+  });
+}
+
+
+function getResidents() {
+  fetch("https://otto-backend.onrender.com/api/eldercare/getresidents", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      residents.value = data.residents;
+      multiSelectWithoutCtrl('#resident');
+    });
+}
 
 function addRide() {
   fetch("https://otto-backend.onrender.com/api/ride/create", {
+    // fetch("http://localhost:3000/api/ride/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       authorization: "bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
-    origin: origincoords.value,
-    originaddress: originaddress.value,
-    destination: destinationcoords.value,
-    destinationaddress: destinationaddress.value,
-    residents: ["6464cdb8e3799b168c97307c"],
-    timeStamp: timestamp.value,
+      origin: origincoords.value,
+      originaddress: originaddress.value,
+      destination: destinationcoords.value,
+      destinationaddress: destinationaddress.value,
+      residents: [resident.value],
+      timeStamp: timestamp.value,
     }),
   })
     .then((response) => response.json())
@@ -48,44 +81,48 @@ function addRide() {
     });
 }
 const geocode = (adres, type) => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-        {
-        address: adres,
-        },
-        (results, status) => {
-            if (status === "OK") {
-                if(type === "origin") {
-                  originaddress.value = results[0].formatted_address;
-                  origincoords.value = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-                } else if(type === "destination") {
-                  destinationaddress.value = results[0].formatted_address;
-                  destinationcoords.value = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-                }
-            }
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode(
+    {
+      address: adres,
+    },
+    (results, status) => {
+      if (status === "OK") {
+        if (type === "origin") {
+          originaddress.value = results[0].formatted_address;
+          origincoords.value = [
+            results[0].geometry.location.lat(),
+            results[0].geometry.location.lng(),
+          ];
+        } else if (type === "destination") {
+          destinationaddress.value = results[0].formatted_address;
+          destinationcoords.value = [
+            results[0].geometry.location.lat(),
+            results[0].geometry.location.lng(),
+          ];
         }
-    );
+      }
+    }
+  );
 };
 
 let typingTimer;
 watch(origin, (o) => {
   clearTimeout(typingTimer);
-  typingTimer = setTimeout(geocode(o, 'origin'), 1500);
+  typingTimer = setTimeout(geocode(o, "origin"), 1500);
 });
 watch(destination, (d) => {
   clearTimeout(typingTimer);
-  typingTimer = setTimeout(geocode(d, 'destination'), 1500);
+  typingTimer = setTimeout(geocode(d, "destination"), 1500);
 });
-
 </script>
 
 <template>
-  <div class="overlay">
-    </div>
-    <div class="container">
+  <div class="overlay"></div>
+  <div class="container">
     <div class="form-container">
       <div class="close" @click="$emit('close')">
-        <img src="../assets/plus.svg" class="plus">
+        <img src="../assets/plus.svg" class="plus" />
       </div>
       <h1>Rit plannen</h1>
       <form @submit.prevent="addRide">
@@ -96,24 +133,38 @@ watch(destination, (d) => {
         <input type="text" id="destination" v-model="destination" required />
 
         <label for="residents">Bewoners:</label>
-        <input type="text" id="residents" v-model="residents" required />
+        <select name="residents" id="residents" v-model="resident" required>
+          <option :value="r._id" v-for="r in residents">{{ r.name }}</option>
+        </select>
 
         <label for="timestamp">Datum & Tijd:</label>
-        <input type="datetime-local" id="timestamp" v-model="timestamp" required />
+        <input
+          type="datetime-local"
+          id="timestamp"
+          v-model="timestamp"
+          required
+        />
 
         <button type="submit">Rit aanmaken</button>
       </form>
     </div>
     <div class="map">
-      <Map
-      :origin="origin"
-      :destination="destination"
-      ></Map>
+      <Map :origin="origin" :destination="destination"></Map>
     </div>
   </div>
 </template>
 
 <style scoped>
+select {
+  border-radius: 10px;
+  border: rgba(223,223,223,1) solid;
+  padding: 18px 19px 15px 19px;
+  margin: 6px 0;
+}
+select:focus, input:focus {
+  outline: none;
+}
+
 button {
   width: 100% !important;
 }
@@ -175,19 +226,17 @@ button:hover {
   height: 2rem;
   background-color: #1e88e5;
   border-radius: 50%;
-  padding: .25rem;
+  padding: 0.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   z-index: 1003;
-
 }
 
 .close img {
   filter: brightness(10);
   transform: rotate(45deg);
   width: 1.5rem;
-
 }
 </style>
