@@ -130,7 +130,7 @@ function atSent() {
         <div class="recentchats">
           <div class="recentchat" v-for="c in chats" @click="openChat(c)" v-if="chats">
             <div class="profilepic">
-              <img class="profilepic" src="https://avatars.githubusercontent.com/u/72497203?v=4" alt="" />
+              <img class="profilepic" :src="c.driver.profilePicture" alt="" />
             </div>
             <div>
               <h3 class="name">{{c.driver.givenName}} {{ c.driver.familyName }}</h3>
@@ -165,7 +165,7 @@ function atSent() {
       </div>
       <div class="chatbox" v-if="c" :key="c">
         <div class="activechat">
-          <img src="https://avatars.githubusercontent.com/u/72497203?v=4" alt="" />
+          <img :src="c.driver.profilePicture" alt="" />
           <h2>{{c.driver.givenName}} {{ c.driver.familyName }}</h2>
         </div>
         <div class="messages">
