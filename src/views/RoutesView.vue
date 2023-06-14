@@ -53,7 +53,7 @@ function toggleAddRide() {
         <div class="card">
           <h1>Ritten met chauffeur</h1>
           <div v-for="r in rides.slice().reverse()" class="container_items">
-            <div class="container_elements" v-if="r.driver && (Date.parse(r.timeStamp) > Date.now())">
+            <div class="container_elements" v-if="r.driver && (Date.parse(r.timeStamp)-7200000 > Date.now())">
               <div class="container_element_picture">
                 <img :src="r.driver.profilePicture" alt="people"/>
               </div>
@@ -129,7 +129,7 @@ function toggleAddRide() {
         <div class="card">
           <h1>Oude ritten</h1>
           <div v-for="r in rides" class="container_items">
-            <div class="container_elements" v-if="(Date.parse(r.timeStamp) < Date.now())">
+            <div class="container_elements" v-if="(Date.parse(r.timeStamp)-7200000 < Date.now()) && (Date.parse(r.timeStamp)-7200000 + (1000*60*30) < Date.now())">
               <div class="container_element_picture">
                 <img :src="r.driver.profilePicture" alt="people" v-if="r.driver"/>
                 <img src="../assets/icons/profile.svg" alt="people" v-else/>
