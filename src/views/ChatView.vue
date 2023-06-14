@@ -1,5 +1,123 @@
 <script setup>
 import Navigation from "../components/Navigation.vue";
+import { ref, onMounted } from "vue";
+
+
+const chats = ref([]);
+const c = ref("");
+const newMessage = ref("");
+
+let primus = Primus.connect("https://otto-backend.onrender.com", {
+  reconnect: {
+    max: Infinity, // Number: The max delay before we try to reconnect.
+    min: 500, // Number: The minimum delay before we try reconnect.
+    retries: 10, // Number: How many times we should try to reconnect.
+  },
+});
+
+primus.on("data", (data) => {
+  if (data.action == "message") {
+    getChats();
+  }
+});
+
+onMounted(() => {
+  getChats();
+});
+
+
+function getChats() {
+  fetch(
+    `https://otto-backend.onrender.com/api/chat/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "bearer " + localStorage.getItem("token"),
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        chats.value = data.chats;
+        if (c.value == ""){
+          c.value = chats.value[0];
+          // c.value.messages = c.value.messages.reverse();
+        } else {
+          chats.value.forEach((chat) => {
+            if (chat._id == c.value._id) {
+              c.value = chat;
+              // c.value.messages = c.value.messages.reverse();
+            }
+          });
+        }
+      } else {
+        console.error("Something went wrong!");
+      }
+    });
+}
+
+function openChat(chat) {
+  c.value = chat;
+}
+
+async function sendMessage(id) {
+  console.log(c._id);
+  let apiUrl = "https://otto-backend.onrender.com/api/message/create";
+  await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({
+      text: newMessage.value,
+    }),
+  })
+    .then((response) => response.json())
+    .then(async (data) => {
+      await fetch(`https://otto-backend.onrender.com/api/chat/addmessage/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          message: data.data.id,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          //TODO: Live update
+          newMessage.value = "";
+
+          delay(1000)
+          .then(() => {
+            primus.write({
+            "action": "message",
+            "data": c.value
+          });
+          })
+
+          getChats();
+        });
+    });
+}
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+function atSent() {
+  delay(1000)
+  .then(() => {
+    primus.write({
+    "action": "message",
+    "data": c.value
+  });
+  })
+
+  getChats();
+}
 </script>
 
 <template>
@@ -8,29 +126,90 @@ import Navigation from "../components/Navigation.vue";
     <div class="flex">
       <div>
         <div class="recentchats">
-          <div class="recentchat">
+          <div class="recentchat" v-for="c in chats" @click="openChat(c)">
             <div class="profilepic">
               <img class="profilepic" src="https://avatars.githubusercontent.com/u/72497203?v=4" alt="" />
             </div>
             <div>
-              <h3 class="name">Bram Colleman</h3>
-              <p class="message">Ik wil een penisvergroting &middot; 2m</p>
+              <h3 class="name">{{c.driver.givenName}} {{ c.driver.familyName }}</h3>
+              <span class="message">{{c.messages[c.messages.length-1].text}} &middot; </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) < 60">
+                {{ Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) + 's' }}
+              </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  3600 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  60 ">
+                {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60) + 'm' }}
+              </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  216000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  3600 ">
+                {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60) + 'u' }}
+              </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  5184000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  216000 ">
+                {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'd' }}
+              </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  36288000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  5184000 ">
+                {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'w' }}
+              </span>
+              <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  1886976000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  36288000 ">
+                {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'j' }}
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="chatbox">
+      <div class="chatbox" v-if="c" :key="c">
         <div class="activechat">
           <img src="https://avatars.githubusercontent.com/u/72497203?v=4" alt="" />
-          <h2>Bram Colleman</h2>
+          <h2>{{c.driver.givenName}} {{ c.driver.familyName }}</h2>
         </div>
-        <input type="text" placeholder="begin met typen..." />
+        <div class="messages">
+          <div v-for="m in c.messages.slice().reverse()" class="cm">
+            <span v-if="m.sender == c.driver._id" class="received">{{m.text}}</span>
+            <span v-if="m.sender == c.eldercare._id" class="sent">{{m.text}}</span>
+          </div>
+        </div>
+        <input type="text" placeholder="begin met typen..." v-model="newMessage" @keyup.enter="sendMessage(c._id)" />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.cm {
+  flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
+.sent {
+  background: #3289f3;
+  color: #ffffff;
+  border-radius: 1.5rem;
+  padding: 0.75rem 1rem;
+  margin: .25rem;
+  max-width: 50%;
+  align-self: flex-end;
+  justify-self: center;
+}
+.received {
+  background: #f3f3f3;
+  margin: .25rem;
+
+  border-radius: 1.5rem;
+  padding: 0.75rem 1rem;
+  max-width: 55%;
+  align-self: flex-start;
+}
+.messages {
+  height: 100%;
+  width: 100%;
+  flex-grow: 1;
+  padding: 1rem 0;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.messages::-webkit-scrollbar {
+  display: none;
+}
+
 
 .profilepic {
   margin: 0;
@@ -59,10 +238,6 @@ img {
 }
 
 input {
-  position: absolute;
-  bottom: 1.5rem;
-
-  width: 63.5vw;
   padding: 1rem;
   font-size: 1rem;
   outline: none;
@@ -73,6 +248,11 @@ input {
   padding-top: 0;
   border-left: 1px solid #e0e0e0;
   margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-grow: 1;
 }
 .message,
 .name {
@@ -96,6 +276,7 @@ h1 {
 .page {
   height: 93vh;
   background-color: #fafafa;
+  width: unset;
 }
 
 .flex {
