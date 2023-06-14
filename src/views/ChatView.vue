@@ -63,7 +63,8 @@ function openChat(chat) {
 }
 
 async function sendMessage(id) {
-  console.log(c._id);
+  if (newMessage.value != "") {
+
   let apiUrl = "https://otto-backend.onrender.com/api/message/create";
   await fetch(apiUrl, {
     method: "POST",
@@ -103,6 +104,7 @@ async function sendMessage(id) {
           getChats();
         });
     });
+  }
 }
 function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -132,26 +134,30 @@ function atSent() {
             </div>
             <div>
               <h3 class="name">{{c.driver.givenName}} {{ c.driver.familyName }}</h3>
-              <span class="message" v-if="c.messages[0]">{{c.messages[c.messages.length-1].text}} &middot; </span>
-              <div v-if="c.messages[0]">
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) < 60" >
-                  {{ Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) + 's' }}
-                </span>
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  3600 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  60 ">
-                  {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60) + 'm' }}
-                </span>
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  216000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  3600 ">
-                  {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60) + 'u' }}
-                </span>
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  5184000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  216000 ">
-                  {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'd' }}
-                </span>
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  36288000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  5184000 ">
-                  {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'w' }}
-                </span>
-                <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  1886976000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  36288000 ">
-                  {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'j' }}
-                </span>
+              <div class="flex preview">
+                <span class="message" v-if="c.messages[0]">{{c.messages[c.messages.length-1].text.substring(0,15)}}</span> 
+                <span class="message" v-if="c.messages[0] && c.messages[c.messages.length-1].text.length > 15">... </span> 
+                <span class="middot"> &middot; </span>
+                <div v-if="c.messages[0]">
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) < 60" >
+                    {{ Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000) + 's' }}
+                  </span>
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  3600 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  60 ">
+                    {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60) + 'm' }}
+                  </span>
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  216000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  3600 ">
+                    {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60) + 'u' }}
+                  </span>
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  5184000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  216000 ">
+                    {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'd' }}
+                  </span>
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  36288000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  5184000 ">
+                    {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'w' }}
+                  </span>
+                  <span class="msg" v-if="Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) <  1886976000 && Math.ceil((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 ) >=  36288000 ">
+                    {{ Math.floor((Date.now() - new Date(c.messages[c.messages.length-1].timestamp)) /1000 /60 /60 /24) + 'j' }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -175,6 +181,15 @@ function atSent() {
 </template>
 
 <style scoped>
+.middot {
+  margin: 0 0.25rem;
+}
+.preview {
+  margin-left: 0!important;
+}
+.preview div {
+  margin: 0 !important;
+}
 .cm {
   flex-direction: column;
   display: flex;
