@@ -39,38 +39,6 @@ import Navigation from "../components/Navigation.vue";
                 <img src="../assets/icons/arrow.svg" alt="">
             </div>
         </div>
-        <div class="card">
-            <div class="flex group">
-                <img src="../assets/icons/heart.svg" alt="">
-                <div class="flex col setting">
-                    <span>Mijn profiel</span>
-                    <span class="subtitle">Pas mijn profiel aan</span>
-                </div>
-                <img src="../assets/icons/arrow.svg" alt="">
-            </div>
-            <div class="flex group">
-                <img src="../assets/icons/heart.svg" alt="">
-                <div class="flex col setting">
-                    <span>Voorkeuren</span>
-                    <span class="subtitle">Wijzig mijn voorkeuren</span>
-                </div>
-                <img src="../assets/icons/arrow.svg" alt="">
-            </div>
-            <div class="flex group">
-                <img src="../assets/icons/heart.svg" alt="">
-                <div class="flex col setting">
-                    <span>Privacy</span>
-                </div>
-                <img src="../assets/icons/arrow.svg" alt="">
-            </div>
-            <div class="flex group">
-                <img src="../assets/icons/heart.svg" alt="">
-                <div class="flex col setting">
-                    <span>Meldingen</span>
-                </div>
-                <img src="../assets/icons/arrow.svg" alt="">
-            </div>
-        </div>
     </div>
   </div>
 </template>
