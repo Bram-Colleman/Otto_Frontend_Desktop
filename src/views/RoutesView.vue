@@ -1,7 +1,29 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Navigation from "../components/Navigation.vue";
 import AddRide from "../components/AddRide.vue";
+
+let rides = ref([]);
+
+function getRides() {
+  const apiUrl = "https://otto-backend.onrender.com/api/ride/getbyeldercare";
+  fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      rides.value = data.rides;
+      console.log(data.rides);
+    });
+}
+
+onMounted(() => {
+  getRides();
+});
 
 let showAddRide = ref(false);
 
@@ -28,67 +50,13 @@ function toggleAddRide() {
       <div class="flex wrapper">
         <div class="card">
           <h1>Actieve ritten</h1>
-          <div class="container_items">
+          <div v-for="r in rides" class="container_items">
             <div class="container_elements">
               <div class="container_element_picture">
                 <img src="../assets/icons/profile.svg" alt="people" />
               </div>
               <div class="container_element_content">
-                <h3>Bram Colleman</h3>
-                <div class="flex flex_destination">
-                  <img src="../assets/icons/route.svg" alt="" />
-                  <span>In de Tuinwijk aan het rijden</span>
-                </div>
-              </div>
-              <div class="icons">
-                <img
-                  class="target"
-                  src="../assets/icons/target.svg"
-                  alt="target"
-                />
-                <img
-                  class="target"
-                  src="../assets/icons/chatblue.svg"
-                  alt="chat"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="container_items">
-            <div class="container_elements">
-              <div class="container_element_picture">
-                <img src="../assets/icons/profile.svg" alt="people" />
-              </div>
-              <div class="container_element_content">
-                <h3>Bram Colleman</h3>
-                <div class="flex flex_destination">
-                  <img src="../assets/icons/route.svg" alt="" />
-                  <span>In de Tuinwijk aan het rijden</span>
-                </div>
-              </div>
-              <div class="icons">
-                <img
-                  class="target"
-                  src="../assets/icons/target.svg"
-                  alt="target"
-                />
-                <img
-                  class="target"
-                  src="../assets/icons/chatblue.svg"
-                  alt="chat"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="container_items">
-            <div class="container_elements">
-              <div class="container_element_picture">
-                <img src="../assets/icons/profile.svg" alt="people" />
-              </div>
-              <div class="container_element_content">
-                <h3>Bram Colleman</h3>
+                <h3>{{ r.name }}</h3>
                 <div class="flex flex_destination">
                   <img src="../assets/icons/route.svg" alt="" />
                   <span>In de Tuinwijk aan het rijden</span>
@@ -111,13 +79,13 @@ function toggleAddRide() {
         </div>
         <div class="card">
           <h1>Aankomende ritten</h1>
-          <div class="container_items">
+          <div v-for="r in rides" class="container_items">
             <div class="container_elements">
               <div class="container_element_picture">
                 <img src="../assets/icons/profile.svg" alt="people" />
               </div>
               <div class="container_element_content">
-                <h3>Bram Colleman</h3>
+                <h3>{{ r.name }}</h3>
                 <div class="flex flex_destination">
                   <img src="../assets/icons/route.svg" alt="" />
                   <span>In de Tuinwijk aan het rijden</span>
@@ -138,58 +106,32 @@ function toggleAddRide() {
             </div>
           </div>
         </div>
-      </div>
-      <div class="card">
-        <h1>Oude ritten</h1>
-        <div class="container_items">
-          <div class="container_elements">
-            <div class="container_element_picture">
-              <img src="../assets/icons/profile.svg" alt="people" />
-            </div>
-            <div class="container_element_content">
-              <h3>Bram Colleman</h3>
-              <div class="flex flex_destination">
-                <img src="../assets/icons/route.svg" alt="" />
-                <span>In de Tuinwijk aan het rijden</span>
+        <div class="card">
+          <h1>Oude ritten</h1>
+          <div v-for="r in rides" class="container_items">
+            <div class="container_elements">
+              <div class="container_element_picture">
+                <img src="../assets/icons/profile.svg" alt="people" />
               </div>
-            </div>
-            <div class="icons">
-              <img
-                class="target"
-                src="../assets/icons/target.svg"
-                alt="target"
-              />
-              <img
-                class="target"
-                src="../assets/icons/chatblue.svg"
-                alt="chat"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="container_items">
-          <div class="container_elements">
-            <div class="container_element_picture">
-              <img src="../assets/icons/profile.svg" alt="people" />
-            </div>
-            <div class="container_element_content">
-              <h3>Bram Colleman</h3>
-              <div class="flex flex_destination">
-                <img src="../assets/icons/route.svg" alt="" />
-                <span>In de Tuinwijk aan het rijden</span>
+              <div class="container_element_content">
+                <h3>{{ r.name }}</h3>
+                <div class="flex flex_destination">
+                  <img src="../assets/icons/route.svg" alt="" />
+                  <span>In de Tuinwijk aan het rijden</span>
+                </div>
               </div>
-            </div>
-            <div class="icons">
-              <img
-                class="target"
-                src="../assets/icons/target.svg"
-                alt="target"
-              />
-              <img
-                class="target"
-                src="../assets/icons/chatblue.svg"
-                alt="chat"
-              />
+              <div class="icons">
+                <img
+                  class="target"
+                  src="../assets/icons/target.svg"
+                  alt="target"
+                />
+                <img
+                  class="target"
+                  src="../assets/icons/chatblue.svg"
+                  alt="chat"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -254,6 +196,7 @@ h1 {
   border-radius: 50%;
 }
 .page {
+  height: 93vh;
   background-color: #fafafa;
 }
 

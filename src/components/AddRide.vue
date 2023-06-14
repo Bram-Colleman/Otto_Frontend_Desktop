@@ -35,7 +35,7 @@ function addRide() {
     destination: destinationcoords.value,
     destinationaddress: destinationaddress.value,
     residents: ["6464cdb8e3799b168c97307c"],
-    timeStamp: timestamp.value
+    timeStamp: timestamp.value,
     }),
   })
     .then((response) => response.json())
