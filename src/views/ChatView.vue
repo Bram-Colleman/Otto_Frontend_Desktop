@@ -6,6 +6,7 @@ import { ref, onMounted } from "vue";
 const chats = ref([]);
 const c = ref("");
 const newMessage = ref("");
+const props = defineProps(["activechat"]);
 
 let primus = Primus.connect("https://otto-backend.onrender.com", {
   reconnect: {

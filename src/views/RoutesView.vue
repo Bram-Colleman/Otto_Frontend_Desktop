@@ -2,13 +2,15 @@
 import { ref, onMounted } from "vue";
 import Navigation from "../components/Navigation.vue";
 import AddRide from "../components/AddRide.vue";
+import moment from "moment";
+
 
 let rides = ref([]);
 
 function getRides() {
   const apiUrl = "https://otto-backend.onrender.com/api/ride/getbyeldercare";
   fetch(apiUrl, {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -17,6 +19,7 @@ function getRides() {
     .then((response) => response.json())
     .then((data) => {
       rides.value = data.rides;
+      console.log(data);
     });
 }
 
@@ -48,88 +51,115 @@ function toggleAddRide() {
       </div>
       <div class="flex wrapper">
         <div class="card">
-          <h1>Actieve ritten</h1>
-          <div v-for="r in rides" class="container_items">
-            <div class="container_elements">
+          <h1>Ritten met chauffeur</h1>
+          <div v-for="r in rides.slice().reverse()" class="container_items">
+            <div class="container_elements" v-if="r.driver && (Date.parse(r.timeStamp) > Date.now())">
               <div class="container_element_picture">
-                <img src="../assets/icons/profile.svg" alt="people" />
+                <img :src="r.driver.profilePicture" alt="people"/>
               </div>
               <div class="container_element_content">
                 <h3>{{ r.name }}</h3>
                 <div class="flex flex_destination">
-                  <img src="../assets/icons/route.svg" alt="" />
-                  <span>In de Tuinwijk aan het rijden</span>
+                  <div class="flex col">
+                    <div class="flex info">
+                      <img src="../assets/icons/route.svg" alt="" />
+                      <span>{{r.destinationAddress}}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/people.svg" alt="" />
+                      <span>{{ r.residents[0].name }}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/clock.svg" alt="" />
+                      <span>{{ moment(Date.parse(r.timeStamp) -7200000).format("DD MMM YYYY - HH:mm")}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="icons">
+              <div class="icons flex">
                 <img
                   class="target"
                   src="../assets/icons/target.svg"
                   alt="target"
                 />
-                <img
-                  class="target"
-                  src="../assets/icons/chatblue.svg"
-                  alt="chat"
-                />
+                <RouterLink class="target" to="/chat" id="chat"><img src="../assets/icons/chat.svg"/></RouterLink>
               </div>
             </div>
           </div>
         </div>
+
         <div class="card">
-          <h1>Aankomende ritten</h1>
+          <h1>Ritten zonder chauffeur</h1>
           <div v-for="r in rides" class="container_items">
-            <div class="container_elements">
+            <div class="container_elements" v-if="r.driver == null">
               <div class="container_element_picture">
                 <img src="../assets/icons/profile.svg" alt="people" />
               </div>
               <div class="container_element_content">
                 <h3>{{ r.name }}</h3>
                 <div class="flex flex_destination">
-                  <img src="../assets/icons/route.svg" alt="" />
-                  <span>In de Tuinwijk aan het rijden</span>
+                  <div class="flex col">
+                    <div class="flex info">
+                      <img src="../assets/icons/route.svg" alt="" />
+                      <span>{{r.destinationAddress}}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/people.svg" alt="" />
+                      <span>{{ r.residents[0].name }}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/clock.svg" alt="" />
+                      <span>{{ moment(Date.parse(r.timeStamp) -7200000).format("DD MMM YYYY - HH:mm")}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="icons">
+              <div class="icons flex">
                 <img
                   class="target"
                   src="../assets/icons/target.svg"
                   alt="target"
                 />
-                <img
-                  class="target"
-                  src="../assets/icons/chatblue.svg"
-                  alt="chat"
-                />
+                <RouterLink class="target" to="/chat" id="chat"><img src="../assets/icons/chat.svg"/></RouterLink>
               </div>
             </div>
           </div>
         </div>
+
         <div class="card">
           <h1>Oude ritten</h1>
           <div v-for="r in rides" class="container_items">
-            <div class="container_elements">
+            <div class="container_elements" v-if="(Date.parse(r.timeStamp) < Date.now())">
               <div class="container_element_picture">
-                <img src="../assets/icons/profile.svg" alt="people" />
+                <img :src="r.driver.profilePicture" alt="people" v-if="r.driver"/>
+                <img src="../assets/icons/profile.svg" alt="people" v-else/>
               </div>
               <div class="container_element_content">
                 <h3>{{ r.name }}</h3>
                 <div class="flex flex_destination">
-                  <img src="../assets/icons/route.svg" alt="" />
-                  <span>In de Tuinwijk aan het rijden</span>
+                  <div class="flex col">
+                    <div class="flex info">
+                      <img src="../assets/icons/route.svg" alt="" />
+                      <span>{{r.destinationAddress}}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/people.svg" alt="" />
+                      <span>{{ r.residents[0].name }}</span>
+                    </div>
+                    <div class="flex info">
+                      <img src="../assets/icons/clock.svg" alt="" />
+                      <span>{{ moment(Date.parse(r.timeStamp) -7200000).format("DD MMM YYYY - HH:mm")}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="icons">
+              <div class="icons flex">
                 <img
                   class="target"
                   src="../assets/icons/target.svg"
                   alt="target"
                 />
-                <img
-                  class="target"
-                  src="../assets/icons/chatblue.svg"
-                  alt="chat"
-                />
+                <RouterLink class="target" to="/chat" id="chat"><img src="../assets/icons/chat.svg"/></RouterLink>
               </div>
             </div>
           </div>
@@ -140,6 +170,9 @@ function toggleAddRide() {
 </template>
 
 <style scoped>
+.info {
+  margin: .5rem 0;
+}
 .plus {
   filter: brightness(100);
   height: 100%;
@@ -190,7 +223,7 @@ h1 {
   padding-right: 0.5rem;
 }
 .container_element_picture img {
-  padding-right: 1rem;
+  margin-right: 1rem;
   width: 4rem;
   border-radius: 50%;
 }
@@ -200,8 +233,10 @@ h1 {
 }
 
 .container_elements {
+  box-shadow: 0px 3px 10px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   margin: 1rem 0;
   padding: 1rem;
@@ -221,7 +256,6 @@ h1 {
 }
 
 .container_items {
-  box-shadow: 0px 3px 10px 4px rgba(0, 0, 0, 0.05);
   border-radius: 5px;
 }
 </style>
